@@ -20,7 +20,15 @@ class MplRenderer:
         }
         plt.style.use("dark_background")
 
-    def render(self, symbol: str, interval: str, df, scene_graph, bar_count: int) -> None:
+    def render(
+        self,
+        symbol: str,
+        interval: str,
+        df,
+        scene_graph,
+        bar_count: int,
+        save_path: str | None = None,
+    ) -> None:
         fig, ax_main = plt.subplots(figsize=(16, 9))
         fig.patch.set_facecolor(self.theme["bg"])
         ax_main.set_facecolor(self.theme["bg"])
@@ -63,7 +71,11 @@ class MplRenderer:
                 )
 
         self._setup_axes(ax_main, df, bar_count)
-        plt.show()
+        if save_path:
+            fig.savefig(save_path, dpi=100, bbox_inches="tight")
+            plt.close(fig)
+        else:
+            plt.show()
 
     def _draw_hud(self, fig, symbol: str, interval: str, df, bar_count: int) -> None:
         col = "Datetime" if "Datetime" in df.columns else "Date"
